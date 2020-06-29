@@ -34,6 +34,8 @@ jobs:
     - name: Set up dependencies
       run: |
         bash .github/workflows/setup-deps.sh
+    - name: Check source code
+      run: ~/.poetry/bin/poetry run make check
     - name: Set up android dependencies
       run: |
         wget --quiet https://github.com/izgzhen/android-platforms/releases/download/v0.1/android-tools-linux.zip

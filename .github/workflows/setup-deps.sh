@@ -6,3 +6,4 @@ pip3 install --upgrade pip
 python3 get-poetry.py --version 1.0.2
 ~/.poetry/bin/poetry install
 ln -s $(~/.poetry/bin/poetry env info --path) .venv
+~/.poetry/bin/poetry add mypy pylint
