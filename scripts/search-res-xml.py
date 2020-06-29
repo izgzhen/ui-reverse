@@ -12,12 +12,10 @@ BACKGROUND = '{http://schemas.android.com/apk/res/android}background'
 HEIGHT = '{http://schemas.android.com/apk/res/android}layout_height'
 
 jadx_apk_dir = sys.argv[1]
-layout_dir = jadx_apk_dir + "/resources/res/layout/"
-values_dir = layout_dir.replace("/layout", "/values")
+values_dir = jadx_apk_dir + "/resources/res/values/"
 
 # uix: UI hierarchy XML file
 uix_path = sys.argv[2]
-uix_tree = ET.parse(uix_path)
 
 # resource-id ==> source fragment node
 res_id_fragments = {} # type: Dict[str, List[LayoutFragment]]
@@ -54,9 +52,9 @@ def collect_named_fragments(node: Element):
     named_fragments = []
     if ID in node.attrib:
         id_ = node.attrib[ID]
-        prefix = "@+id/"
-        if id_.startswith(prefix):
-            id_ = id_[len(prefix):]
+        infix = "id/"
+        if infix in id_:
+            id_ = id_.split(infix)[1]
             named_fragments.append(LayoutFragment(id_, None, node)) # type: ignore
         else:
             print("WRAN: unknown prefix " + id_)
@@ -165,11 +163,12 @@ class LayoutTraverse(object):
         # Print the hierarchy
         self.print()
 
-        # Finding the matched fragment and its similarity score
-        parents = self.get_parents()
         # If there is any fragment with same ID
         if self.fragments:
             non_terminal_fragments = []
+
+            # Finding the matched fragment and its similarity score
+            parents = self.get_parents()
             for fragment in self.fragments:
                 # If the fragment's static XML node has no children (i.e. is a terminal node)
                 if len(list(fragment.node)) == 0:
@@ -197,6 +196,8 @@ class LayoutTraverse(object):
                 print("Non-terminal frag: " + fragment.path)
                 print("Score: %s" % score)
                 print()
+        else:
+            print("No fragments with such id")
 
         # Recursive finding
         for c in self.children:
@@ -210,12 +211,34 @@ class LayoutTraverse(object):
         for child in self.children:
             child.print(depth = depth + 1, class_only = class_only)
 
+def is_potential_layout_xml(xml):
+    tree = ET.parse(xml)
+    root = tree.getroot()
+    if root.tag in ["paths", "menu", "ripple", "vector", "selector", "set", "merge", \
+        "translate", "alpha", "layer-list", "inset", "shape", "transition", "bitmap", \
+        "animated-vector", "animated-selector", "objectAnimator"]: return False
+    if "Layout" in root.tag: return True
+    if "View" in root.tag: return True
+    if "Button" in root.tag: return True
+    if root.tag in ["view", "CheckBox", "Chronometer"]: return True # FIXME: how
+    assert False, (root.tag, xml)
+
 if __name__ == "__main__":
     # Construct static fragments nodes
-    for xml_path in glob.glob(layout_dir + "/**/*.xml", recursive=True):
+    layout_xmls = glob.glob(jadx_apk_dir + "/resources/res/layout/**/*.xml", recursive=True)
+    # FIXME: some APK (9505614c0a9ceb72d6902d8156a940f2c29846a4200f895d6fd7654ec93b3a2d.apk) has obfuscated layout dir name, such as
+    #    it is not necessarily /layout
+    for xml in glob.glob(jadx_apk_dir + "/resources/res/**/*.xml", recursive=True):
+        if xml in layout_xmls: continue
+        if "/values" in xml: continue
+        if not is_potential_layout_xml(xml): continue
+        layout_xmls.append(xml)
+
+    for xml_path in layout_xmls:
         analyze_layout(xml_path)
 
     # Prepare to analyze the dynamic view hierarchy
+    uix_tree = ET.parse(uix_path)
     uix_root = uix_tree.getroot()
     assert uix_root.tag == "hierarchy"
     top_node = list(uix_root)[0]
