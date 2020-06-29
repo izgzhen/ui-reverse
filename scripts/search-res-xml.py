@@ -53,11 +53,9 @@ def collect_named_fragments(node: Element):
     if ID in node.attrib:
         id_ = node.attrib[ID]
         infix = "id/"
-        if infix in id_:
-            id_ = id_.split(infix)[1]
-            named_fragments.append(LayoutFragment(id_, None, node)) # type: ignore
-        else:
-            print("WRAN: unknown prefix " + id_)
+        assert infix in id_:
+        id_ = id_.split(infix)[1]
+        named_fragments.append(LayoutFragment(id_, None, node)) # type: ignore
     for n in node:
         assert n not in fragment_node_parent
         fragment_node_parent[n] = node
