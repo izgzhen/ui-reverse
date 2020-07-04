@@ -53,7 +53,7 @@ def collect_named_fragments(node: Element):
     if ID in node.attrib:
         id_ = node.attrib[ID]
         infix = "id/"
-        assert infix in id_:
+        assert infix in id_
         id_ = id_.split(infix)[1]
         named_fragments.append(LayoutFragment(id_, None, node)) # type: ignore
     for n in node:
@@ -210,27 +210,34 @@ class LayoutTraverse(object):
             child.print(depth = depth + 1, class_only = class_only)
 
 def is_potential_layout_xml(xml):
+    """
+    Guess whether `xml` is a layout XML file using some very limited heuristics.
+    """
     tree = ET.parse(xml)
     root = tree.getroot()
+    # NOTE: this is a empirical list -- please update it manually if the exception is thrown
+    # by creating a pull request
     if root.tag in ["paths", "menu", "ripple", "vector", "selector", "set", "merge", \
         "translate", "alpha", "layer-list", "inset", "shape", "transition", "bitmap", \
         "animated-vector", "animated-selector", "objectAnimator"]: return False
+    # If the XML tag satisfies the following conditions, we guess it is a Layout XML.
     if "Layout" in root.tag: return True
     if "View" in root.tag: return True
     if "Button" in root.tag: return True
     if root.tag in ["view", "CheckBox", "Chronometer"]: return True # FIXME: how
-    assert False, (root.tag, xml)
+    raise Exception("Unexpected tag %s from %s" % (root.tag, xml))
 
 if __name__ == "__main__":
     # Construct static fragments nodes
     layout_xmls = glob.glob(jadx_apk_dir + "/resources/res/layout/**/*.xml", recursive=True)
-    # FIXME: some APK (9505614c0a9ceb72d6902d8156a940f2c29846a4200f895d6fd7654ec93b3a2d.apk) has obfuscated layout dir name, such as
-    #    it is not necessarily /layout
-    for xml in glob.glob(jadx_apk_dir + "/resources/res/**/*.xml", recursive=True):
-        if xml in layout_xmls: continue
-        if "/values" in xml: continue
-        if not is_potential_layout_xml(xml): continue
-        layout_xmls.append(xml)
+    if layout_xmls == []:
+        # FIXME: some APK (9505614c0a9ceb72d6902d8156a940f2c29846a4200f895d6fd7654ec93b3a2d.apk) has obfuscated layout dir name, such as
+        #    it is not necessarily /layout
+        for xml in glob.glob(jadx_apk_dir + "/resources/res/**/*.xml", recursive=True):
+            if xml in layout_xmls: continue
+            if "/values" in xml: continue
+            if not is_potential_layout_xml(xml): continue
+            layout_xmls.append(xml)
 
     for xml_path in layout_xmls:
         analyze_layout(xml_path)
