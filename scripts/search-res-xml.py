@@ -230,13 +230,14 @@ def is_potential_layout_xml(xml):
 if __name__ == "__main__":
     # Construct static fragments nodes
     layout_xmls = glob.glob(jadx_apk_dir + "/resources/res/layout/**/*.xml", recursive=True)
-    # FIXME: some APK (9505614c0a9ceb72d6902d8156a940f2c29846a4200f895d6fd7654ec93b3a2d.apk) has obfuscated layout dir name, such as
-    #    it is not necessarily /layout
-    for xml in glob.glob(jadx_apk_dir + "/resources/res/**/*.xml", recursive=True):
-        if xml in layout_xmls: continue
-        if "/values" in xml: continue
-        if not is_potential_layout_xml(xml): continue
-        layout_xmls.append(xml)
+    if layout_xmls == []:
+        # FIXME: some APK (9505614c0a9ceb72d6902d8156a940f2c29846a4200f895d6fd7654ec93b3a2d.apk) has obfuscated layout dir name, such as
+        #    it is not necessarily /layout
+        for xml in glob.glob(jadx_apk_dir + "/resources/res/**/*.xml", recursive=True):
+            if xml in layout_xmls: continue
+            if "/values" in xml: continue
+            if not is_potential_layout_xml(xml): continue
+            layout_xmls.append(xml)
 
     for xml_path in layout_xmls:
         analyze_layout(xml_path)
