@@ -1,6 +1,25 @@
 Android UI Reverse Tool
 ======
 
+## Dependencies
+
+Currently we are using [Poetry](https://python-poetry.org/)
+to manage the dependencies.
+
+Install and enter the virtual env:
+
+```
+poetry install
+poetry shell
+```
+
+Create a link from poetry's virtual env to `.venv`
+(if you are using VS code, it will automatically use this environment):
+
+```
+make link-venv
+```
+
 ## Usage
 
 ```
