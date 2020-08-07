@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,9 +37,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         alertDialog.dismiss();
+                        ImageView image = (ImageView)findViewById(R.id.headImage);
+                        image.setImageResource(R.drawable.testpic);
                     }
                 });
-                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "NO", new DialogInterface.OnClickListener() {
+                alertDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "KINDA", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         alertDialog.dismiss();

@@ -1,7 +1,7 @@
 import os
 from msbase.subprocess_ import try_call_std
 from msbase.utils import getenv
-
+os.environ["MARKII_DIR"] = os.getcwd() + os.sep + "markii"
 MARKII_DIR = getenv("MARKII_DIR")
 
 def run_markii(apk: str, facts_dir: str):
@@ -11,3 +11,4 @@ def run_markii(apk: str, facts_dir: str):
     os.system("mkdir -p " + facts_dir)
     # Run markii
     try_call_std(["bash", MARKII_DIR + "/build-run-markii.sh", apk, facts_dir], output=False, timeout_s=1200)
+
