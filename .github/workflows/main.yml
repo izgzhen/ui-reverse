@@ -15,9 +15,14 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1.1.1
+#     - name: Set up Python 3.7
+#       uses: actions/setup-python@v1.1.1
+#       with:
+#         python-version: 3.7
+    - name: Setup Python
+      uses: actions/setup-python@v2.2.1
       with:
+        # Version range or exact version of a Python version to use, using SemVer's version range syntax.
         python-version: 3.7
     - name: Cache poetry
       uses: actions/cache@v1
