@@ -1,0 +1,4 @@
+&lt;com.example.my_first_app.FireMissilesDialogFragment$1: void onClick(android.content.DialogInterface,int)&gt;	method linked in java	20	com.example.my_first_app.FireMissilesDialogFragment$1	1913029067
+&lt;com.example.my_first_app.FireMissilesDialogFragment$2: void onClick(android.content.DialogInterface,int)&gt;	method linked in java	26	com.example.my_first_app.FireMissilesDialogFragment$2	1913029071
+&lt;com.example.my_first_app.MainActivity: void sendMessage(android.view.View)&gt;	/var/folders/5m/1vl49g8j5fq09m__0sy5js_c0000gn/T/gator-73csyob8/res//layout/activity_main.xml	23	com.example.my_first_app.MainActivity	-573694694
+&lt;com.example.my_first_app.MainActivity: void fire(android.view.View)&gt;	/var/folders/5m/1vl49g8j5fq09m__0sy5js_c0000gn/T/gator-73csyob8/res//layout/activity_main.xml	30	com.example.my_first_app.MainActivity	-573694701

@@ -468,16 +468,13 @@ class LayoutTraverse(object):
 
     def print(self, print_depth = 0, class_only = False):
         print("\t|" * print_depth + "- " + colored(self.node_class, "green") + self.value_str)
-        if self.dialog and "button1" in self.value_str:
+        if self.dialog and "button1" in self.value_str and self.dialog.positive:
             for line in self.dialog.positive.toList():
                 print("\t|" * (print_depth + 1) + "- " + colored(line, "red") )
-            # print("\t|" * (print_depth + 1) + "- " + colored(str(self.dialog.positive), "red") )
-        elif self.dialog and "button2" in self.value_str:
+        elif self.dialog and "button2" in self.value_str and self.dialog.negative:
             for line in self.dialog.negative.toList():
                 print("\t|" * (print_depth + 1) + "- " + colored(line, "red") )
-            # print("\t|" * (print_depth + 1) + "- " + colored(str(self.dialog.negative), "red") )
-        elif self.dialog and "button3" in self.value_str:
-            # print("\t|" * (print_depth + 1) + "- " + colored(str(self.dialog.neutral), "red") )
+        elif self.dialog and "button3" in self.value_str and self.dialog.neutral:
             for line in self.dialog.neutral.toList():
                 print("\t|" * (print_depth + 1) + "- " + colored(line, "red") )
         elif self.methodLineInfo:
