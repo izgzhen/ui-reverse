@@ -10,7 +10,7 @@ cd tests/test02
 ./gradlew assembleDebug
 cd -
 
-cd..
+# cd ..
 
 test01apk="tests/test01/app/build/outputs/apk/debug/app-debug.apk"
 test02apk="tests/test02/app/build/outputs/apk/debug/app-debug.apk"
